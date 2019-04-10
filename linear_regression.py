@@ -1,26 +1,37 @@
+import tensorflow as tf
 import numpy as np
-import  pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
+#get the data input
 
-#fake dữ liệu training
-x_train = np.array([[20,1],[24,1],[18,1],[16,1],[30,1],[28,1],[50,2],[60,2],[55,2],[60,2],[65,2],[70,2],
-                      [85,3],[90,3],[80,3],[101,3],[62,2],[75,3],[40,2],[58,2]], dtype='float32')
+data = pd.read_csv('datashets.csv').values
+#so input
+N = data.shape[0]
+#tach x, y
+x_train = data[:, [0,1]].reshape(-1,2)
 
-y_train = np.array([2000000,2500000,2300000,1800000,3000000,2800000,4000000,4600000,4300000,5000000,5400000,
-                    6000000,7500000,8000000,7800000,9000000,4800000,6800000,3800000,5600000], dtype='float32')
-x_train = x_train.reshape(-1,2)
-y_train = y_train.reshape(-1,1)
+y_train = data[:,2].reshape(-1,1)
 
-N = x_train.shape[0]
-b = np.linspace(0., 1.,20).reshape(-1,1)
-w = np.array([3, 4], dtype='float32').reshape(-1,1)
-learning_rate = 0.00001
-y_pre = np.dot(x_train,w) + b
-for i in range(20):
-    #tính r = y^-y
-    r = y_train - y_pre
-    loss = 0.5*sum(r*r)/N
-
-    #cập nhật giá trị w
-    w[0] -= learning_rate*sum(np.multiply(x_train[:,0], r))
-    w[1] -= learning_rate*sum(np.multiply(x_train[:,1], r))
+b = np.linspace(0,1,19).reshape(-1,1)
+#giá trị khởi tạo w
+w = np.array([0.,1.]).reshape(-1,1)
+#x_train = np.hstack((np.ones((N,1)),x_train))
+learning_rate = 0.0000005
+for i in range(100):
+    #tinh y^-y
+    r = np.add(np.dot(x_train,w),b) - y_train
+    #tinh loss
+    loss = 0.5*np.sum(r*r)/N
+    b[:] -= learning_rate*np.sum(r)
+    w[0] -= learning_rate*np.sum(np.multiply(r, x_train[:,0]))
+    w[1] -= learning_rate*np.sum(np.multiply(r, x_train[:,1]))
     print(loss)
+predict = np.add(np.dot(x_train,w),b)
+# plt.plot(x_train[0], x_train[N-1], predict[0], predict[N-1], 'r')
+# plt.show()
+
+x1 = 49
+x2 = 2
+y = b[0] + w[0]*x1 + w[1]*x2
+print('gia du  doan', y)
