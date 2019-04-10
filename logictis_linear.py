@@ -8,6 +8,13 @@ N, d = data.shape
 x = data[:,0:d-1].reshape(-1,2)
 y = data[:, d-1].reshape(-1,1)
 
+plt.scatter(x[:10,0], x[:10,1], c='red', edgecolors=None, s=30, label='Cho vay')
+plt.scatter(x[10:,0], x[10:, 1], c = 'blue', edgecolors=None, s = 30, label='Khong cho vay')
+plt.legend(loc=1)
+plt.xlabel('Muc luong')
+plt.ylabel('nam kinh nghiem')
+plt.show()
+
 x = np.hstack((np.ones((N,1)),x))
 
 w = np.array([0., 0.5, 1.]).reshape(-1,1)
